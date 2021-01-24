@@ -67,9 +67,9 @@ class DiscriminativeLoss(_Loss):
                 centroid_mean.append(mean_i)
 
                 # ---------- var_loss -------------
-                var_loss = var_loss + torch.mean(F.relu(
-                    torch.norm(embedding_i - mean_i, dim=1) - self.delta_var) ** 2) / num_lanes
-            centroid_mean = torch.stack(centroid_mean)  # (n_lane, embed_dim)
+                relu = F.relu(torch.norm(embedding_i - mean_i) - self.delta_var)
+                var_loss = var_loss + torch.mean(relu ** 2) / num_lanes
+                centroid_mean = torch.stack(centroid_mean)  # (n_lane, embed_dim)
 
             if num_lanes > 1:
                 centroid_mean1 = centroid_mean.reshape(-1, 1, embed_dim)
